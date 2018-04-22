@@ -1,0 +1,27 @@
+let express = require('express')
+let app = express()
+let bodyParser = require('body-parser')
+let cors = require('cors')
+let log = require('winston')
+let mongoose = require('mongoose')
+let indexRouter = require('./routes/index/router')
+let imageRouter = require('./routes/image/router')
+let userRouter = require('./routes/user/router')
+let TrackingMiddleware = require('@weeb_services/wapi-core').TrackingMiddleware
+let pkg = require('./package.json')
+const config = require('./config/config')
+mongoose.connect('mongodb://localhost/rra', (err) => {
+  if (err) {
+    return log.error('Unable to connect to Mongo Server!')
+  }
+})
+app.use(cors())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
+app.use('/', indexRouter)
+app.use('/', imageRouter)
+app.use('/', userRouter)
+app.use(new TrackingMiddleware(pkg.name, pkg.version, 'production', config.key).middleware())
+express.static('./images')
+app.listen(7009, '127.0.0.1')
+log.info('Server Started!')

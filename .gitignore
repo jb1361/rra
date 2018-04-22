@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+out
+gen
+node_modules/
+cmd.bat
+/images
+routes/server/
+config/config.json
